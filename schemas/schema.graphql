@@ -1,0 +1,225 @@
+directive @cypher(statement: String!) on FIELD_DEFINITION | FIELD
+
+scalar URI
+
+enum NodeType{
+  API
+  Command
+  Query
+  Event
+  Persistence
+  AbstractUserInterface
+  Object
+  Computation
+  Container
+  Domain
+  Invariant
+  ArchitecturalDecisionRecord
+  Definition
+}
+
+enum LinkType{
+  PartOf
+  Trigger
+  Read
+  Mutate
+  Generic
+}
+
+enum ArrowType{
+  default
+  none
+  Sharp
+  Curve
+  Diamond
+  Arrow
+  Box
+  Triangle
+  Bar
+  InvTriangle
+}
+
+interface IReturnInfo{
+  success: Boolean!
+  message: String
+}
+
+interface IDisplayable{
+  """
+  Minimal data necessary for the object to appear on screen
+  """
+  id: ID!
+  label: String
+  story: URI
+}
+
+interface ILink{
+  """
+  A link must know to what nodes it is connected to
+  """
+  type: LinkType!
+  x: Node! @cypher(statement: "MATCH (this)-[:X_NODE]->(n:Node) RETURN n")
+  y: Node! @cypher(statement: "MATCH (this)-[:Y_NODE]->(n:Node) RETURN n")
+  x_end: LinkEnd @cypher(statement: "MATCH (this)-[:X_END]->(le:LinkEnd) RETURN le")
+  y_end: LinkEnd @cypher(statement: "MATCH (this)-[:Y_END]->(le:LinkEnd) RETURN le")
+  sequence: SequenceProperty @cypher(statement: "MATCH (this)-[:IS]->(s:Sequence) RETURN s")
+  """
+  if optional=true then sequence MAY be used to define a set of options
+  """
+  optional: Boolean
+}
+
+interface INode{
+  type: NodeType!
+  Links: [Link] @cypher(statement: "MATCH (this)--(l:Link) RETURN l")
+  """
+  These two might change in the future
+  """
+  synchronous: Boolean
+  unreliable: Boolean
+}
+
+type Node implements INode & IDisplayable{
+  id: ID!
+  label: String!
+  type: NodeType!
+  story: URI
+  Links: [Link] @cypher(statement: "MATCH (this)--(l:Link) RETURN l")
+  synchronous: Boolean
+  unreliable: Boolean
+  edited: Boolean
+  created: Boolean
+}
+
+type Link implements ILink & IDisplayable{
+  id: ID!
+  label: String!
+  type: LinkType!
+  x: Node! @cypher(statement: "MATCH (this)-[:X_NODE]->(n:Node) RETURN n")
+  y: Node! @cypher(statement: "MATCH (this)-[:Y_NODE]->(n:Node) RETURN n")
+  x_end: LinkEnd @cypher(statement: "MATCH (this)-[:X_END]->(le:LinkEnd) RETURN le")
+  y_end: LinkEnd @cypher(statement: "MATCH (this)-[:Y_END]->(le:LinkEnd) RETURN le")
+  sequence: SequenceProperty @cypher(statement: "MATCH (this)-[:IS]->(s:Sequence) RETURN s")
+  story: URI
+  optional: Boolean
+  edited: Boolean
+  created: Boolean
+}
+
+type SequenceProperty{
+  group: String
+  seq: Int
+}
+
+input NodeInput{
+  label: String
+  story: URI
+  type: NodeType
+  synchronous: Boolean
+  unreliable: Boolean
+}
+
+input NodeCreateInput{
+  synchronous: Boolean
+  unreliable: Boolean
+  story: URI
+}
+
+type LinkEnd{
+  note: String
+  arrow: ArrowType
+}
+
+input LinkInput{
+  label: String
+  x_id: ID
+  y_id: ID
+  type: LinkType
+  story: URI
+  optional: Boolean
+}
+
+input LinkCreateInput{
+  story: URI
+  optional: Boolean
+}
+
+input LinkEndInput{
+  note: String
+  xy: String!
+  arrow: ArrowType
+}
+
+input SequencePropertyInput{
+  group: String
+  seq: Int
+}
+
+type Mutation{
+  SeedDB: seedReturn
+  CreateNode(id: ID!, label: String!, type: NodeType!, props: NodeCreateInput): NodeOperationReturn
+  CreateLink(id: ID!, label: String!, x_id: ID!, y_id: ID!, type: LinkType!, props: LinkCreateInput): LinkOperationReturn
+  CreateSequence(link_id: ID!, props: SequencePropertyInput): SequenceOperationReturn
+  CreateLinkEnd(link_id: ID!, props: LinkEndInput): LinkEndOperationReturn
+
+  MergeSequence(link_id: ID!, props: SequencePropertyInput): SequenceOperationReturn
+  MergeLinkEnd(link_id: ID!, props: LinkEndInput): LinkEndOperationReturn
+
+  UpdateNode(id: ID!, props: NodeInput): NodeOperationReturn
+  UpdateLink(id: ID!, props: LinkInput): LinkOperationReturn
+  UpdateSequence(link_id: ID!, props: SequencePropertyInput): SequenceOperationReturn
+  UpdateLinkEnd(link_id: ID!, props: LinkEndInput): LinkEndOperationReturn
+
+  DeleteNode(id: ID!): deleteReturn
+  DeleteLink(id: ID!): deleteReturn
+  DeleteSequence(link_id: ID!): deleteReturn
+  DeleteLinkEnd(link_id: ID!, xy: String!): deleteReturn
+}
+
+type Query{
+  Nodes: [Node]
+  Links: [Link]
+  LinkById(id: ID!): Link
+  NodeById(id: ID!): Node
+  NodeByLabel(label: String!): [Node]
+}
+
+type SequenceOperationReturn implements IReturnInfo{
+  success: Boolean!
+  message: String
+  seq: SequenceProperty
+  link: Link
+}
+
+type LinkEndOperationReturn implements IReturnInfo{
+  message: String
+  success: Boolean!
+  link: Link
+  end: LinkEnd
+}
+
+type NodeOperationReturn implements IReturnInfo {
+  success: Boolean!
+  message: String
+  node: Node
+}
+
+type LinkOperationReturn implements IReturnInfo{
+  success: Boolean!
+  message: String
+  link: Link
+}
+
+type seedReturn {
+  success: Boolean!
+}
+
+type deleteReturn {
+  success: Boolean!
+  id: ID!
+}
+
+schema {
+  mutation: Mutation
+  query: Query
+}
