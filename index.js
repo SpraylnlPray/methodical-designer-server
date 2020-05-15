@@ -10,12 +10,7 @@ const errorPlugin = require( './error-logging-plugin' );
 
 const app = express();
 
-let corsOptions = {
-	origin: 'https://master.d2vrxrsm8mkb6k.amplifyapp.com',
-	// origin: 'http://localhost:3000',
-	credentials: true,
-};
-app.use( cors( corsOptions ) );
+app.use( cors() );
 
 const URI = `bolt://${ process.env.DB_HOST }:${ process.env.DB_PORT }`;
 const driver = neo4j.driver(
@@ -41,6 +36,10 @@ const server = new ApolloServer( {
 			stack: err.path,
 		};
 	},
+	formatResponse: ( res ) => {
+		console.log('a response was sent!');
+		return res;
+	},
 } );
 
 const port = process.env.PORT;
@@ -49,7 +48,6 @@ const path = process.env.ENDPOINT;
 server.applyMiddleware( { 
 	app, 
 	path,
-	cors: false,
 } );
 
 app.listen( { port, path }, () => {

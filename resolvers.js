@@ -1,7 +1,7 @@
 const seedQuery = require( './seed' );
 const neo4j = require( 'neo4j-driver' );
 const { defaultNode, defaultLink, defaultSeq, defaultLinkEnd } = require( './defaults' );
-const { PrepareReturn, TakeKeysFromProps } = require( './ResolverUtils' );
+const { PrepareReturn, TakeKeysFromProps, SetDefaults } = require( './ResolverUtils' );
 const defaultRes = { success: true, message: '' };
 const errorRes = e => ({ success: false, message: e.message });
 
@@ -344,6 +344,23 @@ const resolvers = {
 			}
 		},
 	},
+	Query: {
+		async Nodes( _, args, ctx ) {
+			console.log('nodes query was hit!!');
+			const session = ctx.driver.session();
+			const query = `
+				match (n:Node) return n
+			`;
+
+			const results = await session.run( query );
+			const nodes = results.records.map(record => {
+				let node = record.get( 'n' ).properties;
+				node = SetDefaults( node, defaultNode );
+				return node;
+			} );
+			return nodes;
+		}
+	}
 };
 
 module.exports = resolvers;
