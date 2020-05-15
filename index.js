@@ -9,7 +9,13 @@ const resolvers = require( './resolvers' );
 const errorPlugin = require( './error-logging-plugin' );
 
 const app = express();
-app.use( cors() );
+
+let corsOptions = {
+	origin: 'https://master.d2vrxrsm8mkb6k.amplifyapp.com',
+	// origin: 'http://localhost:3000',
+	credentials: true,
+};
+app.use( cors( corsOptions ) );
 
 const URI = `bolt://${ process.env.DB_HOST }:${ process.env.DB_PORT }`;
 const driver = neo4j.driver(
@@ -40,7 +46,11 @@ const server = new ApolloServer( {
 const port = process.env.PORT;
 const path = process.env.ENDPOINT;
 
-server.applyMiddleware( { app, path } );
+server.applyMiddleware( { 
+	app, 
+	path,
+	cors: false,
+} );
 
 app.listen( { port, path }, () => {
 	console.log( `Server listening at http://localhost:${ port }${ path }` );
