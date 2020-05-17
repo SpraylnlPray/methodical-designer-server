@@ -344,23 +344,6 @@ const resolvers = {
 			}
 		},
 	},
-	Query: {
-		async Nodes( _, args, ctx ) {
-			console.log('nodes query was hit!!');
-			const session = ctx.driver.session();
-			const query = `
-				match (n:Node) return n
-			`;
-
-			const results = await session.run( query );
-			const nodes = results.records.map(record => {
-				let node = record.get( 'n' ).properties;
-				node = SetDefaults( node, defaultNode );
-				return node;
-			} );
-			return nodes;
-		}
-	}
 };
 
 module.exports = resolvers;
