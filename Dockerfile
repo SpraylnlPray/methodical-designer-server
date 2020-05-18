@@ -14,9 +14,9 @@ RUN npm install --silent
 
 ENV PORT=8080
 ENV ENDPOINT=/graphql
-DB_DEV_PW=methodical-neo-dev
+ENV DB_DEV_PW=methodical-neo-dev
 ENV DB_USER=neo4j
-DB_DEV_HOST=ec2-18-191-205-166.us-east-2.compute.amazonaws.com
+ENV DB_DEV_HOST=ec2-18-191-205-166.us-east-2.compute.amazonaws.com
 ENV DB_PORT=7687
 ENV NODE_ENV=development
 
