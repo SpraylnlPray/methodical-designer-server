@@ -16,7 +16,7 @@ ENV PORT=8080
 ENV ENDPOINT=/graphql
 ENV DB_PROD_PW=methodical-neo-1
 ENV DB_USER=neo4j
-ENV DB_PROD_HOST=ec2-3-133-107-131.us-east-2.compute.amazonaws.com
+ENV DB_PROD_HOST=neo4j.methodical.software
 ENV DB_PORT=7687
 ENV NODE_ENV=production
 
