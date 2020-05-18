@@ -14,10 +14,11 @@ RUN npm install --production --silent
 
 ENV PORT=8080
 ENV ENDPOINT=/graphql
-ENV DB_PW=methodical-neo-1
+ENV DB_PROD_PW=methodical-neo-1
 ENV DB_USER=neo4j
-ENV DB_HOST=ec2-3-133-107-131.us-east-2.compute.amazonaws.com
+ENV DB_PROD_HOST=ec2-3-133-107-131.us-east-2.compute.amazonaws.com
 ENV DB_PORT=7687
+ENV NODE_ENV=production
 
 # add app
 COPY . ./

@@ -11,11 +11,13 @@ const errorPlugin = require( './error-logging-plugin' );
 const app = express();
 
 app.use( cors() );
+const DB_HOST = process.env.NODE_ENV === 'production' ? process.env.DB_PROD_HOST : process.env.DB_DEV_HOST;
+const DB_PW = process.env.NODE_ENV === 'production' ? process.env.DB_PROD_PW : process.env.DB_DEV_PW;
 
-const URI = `bolt://${ process.env.DB_HOST }:${ process.env.DB_PORT }`;
+const URI = `bolt://${ DB_HOST }:${ process.env.DB_PORT }`;
 const driver = neo4j.driver(
 	URI,
-	neo4j.auth.basic( process.env.DB_USER, process.env.DB_PW ),
+	neo4j.auth.basic( process.env.DB_USER, DB_PW ),
 );
 
 const schema = makeAugmentedSchema( { typeDefs, resolvers } );
@@ -41,8 +43,8 @@ const server = new ApolloServer( {
 const port = process.env.PORT;
 const path = process.env.ENDPOINT;
 
-server.applyMiddleware( { 
-	app, 
+server.applyMiddleware( {
+	app,
 	path,
 } );
 
