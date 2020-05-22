@@ -38,6 +38,10 @@ const server = new ApolloServer( {
 			stack: err.path,
 		};
 	},
+	formatResponse: ( res ) => {
+		console.log( 'Server requested data' );
+		return res;
+	},
 } );
 
 const port = process.env.PORT;
