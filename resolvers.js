@@ -1,11 +1,33 @@
 const seedQuery = require( './seed' );
 const neo4j = require( 'neo4j-driver' );
 const { defaultNode, defaultLink, defaultSeq, defaultLinkEnd } = require( './defaults' );
-const { PrepareReturn, TakeKeysFromProps, SetDefaults } = require( './ResolverUtils' );
+const { PrepareReturn, TakeKeysFromProps } = require( './ResolverUtils' );
 const defaultRes = { success: true, message: '' };
 const errorRes = e => ({ success: false, message: e.message });
 
 const resolvers = {
+	Query: {
+		async IsProjectBeingEdited( _, __, ctx ) {
+			try {
+				const session = ctx.driver.session();
+				const getCurStatusQuery = `
+					MATCH (p:Project)
+					RETURN p
+				`;
+
+				const results = await session.run( getCurStatusQuery );
+				const project = results.records[0].get( 'p' ).properties;
+
+				return {
+					...defaultRes,
+					isBeingEdited: project.isBeingEdited,
+				};
+			}
+			catch ( e ) {
+				return { ...errorRes, isBeingEdited: false };
+			}
+		},
+	},
 	Mutation: {
 		async SeedDB( _, __, ctx ) {
 			const session = ctx.driver.session();
@@ -341,6 +363,75 @@ const resolvers = {
 			}
 			catch ( e ) {
 				errorRes( e );
+			}
+		},
+
+		async RequestEditRights( _, __, ctx ) {
+			try {
+				const session = ctx.driver.session();
+				const getCurStatusQuery = `
+					MATCH (p:Project)
+					RETURN p
+				`;
+
+				const results = await session.run( getCurStatusQuery );
+				let project = results.records[0].get( 'p' ).properties;
+				// we need to return false to tell the UI that the request failed
+				if ( project.isBeingEdited ) {
+					return {
+						success: false,
+						message: 'Someone else is currently editing the project',
+					};
+				}
+				else {
+					// set isBeingEdited true in the DB and return the property
+					const setEditQuery = `
+						MATCH (p:Project) 
+						SET p.isBeingEdited = true
+						RETURN p
+					`;
+					const setResults = await session.run( setEditQuery );
+					project = setResults.records[0].get( 'p' ).properties;
+					if ( project.isBeingEdited ) {
+						return { ...defaultRes };
+					}
+					else {
+						return {
+							success: false,
+							message: 'There was an error when requesting editing rights.',
+						};
+					}
+				}
+			}
+			catch ( e ) {
+				return { ...errorRes };
+			}
+		},
+
+		async FreeEditRights( _, __, ctx ) {
+			try {
+				const session = ctx.driver.session();
+				const setCurStatusQuery = `
+					MATCH (p:Project)
+					set p.isBeingEdited = false
+					RETURN p
+				`;
+
+				const results = await session.run( setCurStatusQuery );
+				let project = results.records[0].get( 'p' ).properties;
+				// if it is now false, return true because the operation worked
+				if ( !project.isBeingEdited ) {
+					return { ...defaultRes };
+				}
+				else {
+					return {
+						success: false,
+						message: `Couldn't free editing rights`,
+					};
+				}
+			}
+			catch ( e ) {
+				return { ...errorRes };
 			}
 		},
 	},

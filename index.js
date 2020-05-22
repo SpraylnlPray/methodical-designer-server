@@ -39,7 +39,7 @@ const server = new ApolloServer( {
 		};
 	},
 	formatResponse: ( res ) => {
-		console.log( 'Server requested data' );
+		// console.log( 'Server requested data' );
 		return res;
 	},
 } );

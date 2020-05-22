@@ -1,4 +1,5 @@
 const query = `
+	CREATE (setting:Project {isBeingEdited: false, name: "Methodical Designer"})
 	CREATE (ui:Node:AbstractUserInterface {id: randomUUID(), label: "UI", story: "Interaction point for the user", type: "AbstractUserInterface", synchronous: false, unreliable: false})
 	CREATE (api:Node:API {id: randomUUID(), label: "Server", story: "Endpoint for requests, fetches and mutates data from/on the DB", type: "API", synchronous: false, unreliable: false})
 	CREATE (pers:Node:Persistence {id: randomUUID(), label: "NeoDB", story: "Saves data for the methodical designer", type: "Persistence", synchronous: false, unreliable: true})

@@ -79,6 +79,11 @@ interface INode{
   unreliable: Boolean
 }
 
+type Project {
+  isBeingEdited: Boolean!
+  name: String!
+}
+
 type Node implements INode & IDisplayable{
   id: ID!
   label: String!
@@ -174,6 +179,9 @@ type Mutation{
   DeleteLink(id: ID!): deleteReturn
   DeleteSequence(link_id: ID!): deleteReturn
   DeleteLinkEnd(link_id: ID!, xy: String!): deleteReturn
+
+  RequestEditRights: EditRightOperationReturn
+  FreeEditRights: EditRightOperationReturn
 }
 
 type Query{
@@ -182,6 +190,18 @@ type Query{
   LinkById(id: ID!): Link
   NodeById(id: ID!): Node
   NodeByLabel(label: String!): [Node]
+  IsProjectBeingEdited: EditRightQueryReturn
+}
+
+type EditRightQueryReturn implements IReturnInfo {
+  isBeingEdited: Boolean!
+  message: String
+  success: Boolean!
+}
+
+type EditRightOperationReturn implements IReturnInfo {
+  message: String
+  success: Boolean!
 }
 
 type SequenceOperationReturn implements IReturnInfo{
