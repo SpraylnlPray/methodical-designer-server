@@ -24,4 +24,4 @@ ENV NODE_ENV=development
 COPY . ./
 
 # start app
-CMD ["npm", "run", "start-dev"]
+CMD ["npm", "run", "start-prod"]
