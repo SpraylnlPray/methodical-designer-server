@@ -10,7 +10,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 # install app dependencies
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm install --production --silent
+RUN npm install --silent
 
 ENV PORT=8080
 ENV ENDPOINT=/graphql
