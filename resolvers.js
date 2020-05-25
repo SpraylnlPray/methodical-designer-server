@@ -7,7 +7,11 @@ const errorRes = e => ({ success: false, message: e.message });
 
 const resolvers = {
 	Query: {
+		async KeepAlive() {
+			return true;
+		},
 		async IsProjectBeingEdited( _, __, ctx ) {
+			console.log( 'requesting is project being edited' );
 			try {
 				const session = ctx.driver.session();
 				const getCurStatusQuery = `
