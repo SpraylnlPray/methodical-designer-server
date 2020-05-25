@@ -412,7 +412,6 @@ const resolvers = {
 		},
 
 		async FreeEditRights( _, __, ctx ) {
-			console.log( 'requesting is project being edited' );
 			try {
 				const session = ctx.driver.session();
 				const setCurStatusQuery = `
