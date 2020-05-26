@@ -27,7 +27,7 @@ enum LinkType{
 }
 
 enum ArrowType{
-  default
+  Default
   none
   Sharp
   Curve
