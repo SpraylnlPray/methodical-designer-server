@@ -77,6 +77,7 @@ interface INode{
   """
   synchronous: Boolean
   unreliable: Boolean
+  connectedTo: [Node] @cypher(statement: "MATCH (this)--(:Link)--(n:Node) return n")
 }
 
 type Project {
@@ -92,6 +93,7 @@ type Node implements INode & IDisplayable{
   Links: [Link] @cypher(statement: "MATCH (this)--(l:Link) RETURN l")
   synchronous: Boolean
   unreliable: Boolean
+  connectedTo: [Node] @cypher(statement: "MATCH (this)--(:Link)--(n:Node) return n")
 }
 
 type Link implements ILink & IDisplayable{
