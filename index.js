@@ -39,7 +39,6 @@ const server = new ApolloServer( {
 		};
 	},
 	formatResponse: ( res ) => {
-		// console.log( 'Server requested data' );
 		return res;
 	},
 } );
@@ -52,7 +51,10 @@ server.applyMiddleware( {
 	path,
 } );
 
+const d = new Date();
+const version = 2;
+
 app.listen( { port, path }, () => {
-	console.log( `Server listening at http://localhost:${ port }${ path }` );
+	console.log( `Server v${ version } listening at ${ d } at http://localhost:${ port }${ path }` );
 } );
 
