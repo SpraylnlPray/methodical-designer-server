@@ -55,6 +55,6 @@ const d = new Date();
 const version = 2;
 
 app.listen( { port, path }, () => {
-	console.log( `Server v${ version } listening at ${ d } at http://localhost:${ port }${ path }` );
+	console.log( `Server v${ version } started at ${ d } listening on http://localhost:${ port }${ path }` );
 } );
 

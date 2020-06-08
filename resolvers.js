@@ -7,9 +7,6 @@ const errorRes = e => ({ success: false, message: e.message });
 
 const resolvers = {
 	Query: {
-		async KeepAlive() {
-			return true;
-		},
 		async IsProjectBeingEdited( _, __, ctx ) {
 			try {
 				const session = ctx.driver.session();

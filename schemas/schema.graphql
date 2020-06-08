@@ -189,7 +189,6 @@ type Query{
   NodeById(id: ID!): Node
   NodeByLabel(label: String!): [Node]
   IsProjectBeingEdited: EditRightQueryReturn
-  KeepAlive: Boolean
 }
 
 type EditRightQueryReturn implements IReturnInfo {
