@@ -29,7 +29,7 @@ enum LinkType{
 enum ArrowType{
   Default
   none
-  Sharp
+  SharpArrow
   Curve
   Diamond
   Arrow
