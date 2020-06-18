@@ -57,7 +57,7 @@ interface ILink{
   """
   A link must know to what nodes it is connected to
   """
-  type: LinkType!
+  linkType: LinkType!
   x: Node! @cypher(statement: "MATCH (this)-[:X_NODE]->(n:Node) RETURN n")
   y: Node! @cypher(statement: "MATCH (this)-[:Y_NODE]->(n:Node) RETURN n")
   x_end: LinkEnd @cypher(statement: "MATCH (this)-[:X_END]->(le:LinkEnd) RETURN le")
@@ -70,7 +70,7 @@ interface ILink{
 }
 
 interface INode{
-  type: NodeType!
+  nodeType: NodeType!
   Links: [Link] @cypher(statement: "MATCH (this)--(l:Link) RETURN l")
   """
   These two might change in the future
@@ -88,7 +88,7 @@ type Project {
 type Node implements INode & IDisplayable{
   id: ID!
   label: String!
-  type: NodeType!
+  nodeType: NodeType!
   story: URI
   Links: [Link] @cypher(statement: "MATCH (this)--(l:Link) RETURN l")
   synchronous: Boolean
@@ -99,7 +99,7 @@ type Node implements INode & IDisplayable{
 type Link implements ILink & IDisplayable{
   id: ID!
   label: String!
-  type: LinkType!
+  linkType: LinkType!
   x: Node! @cypher(statement: "MATCH (this)-[:X_NODE]->(n:Node) RETURN n")
   y: Node! @cypher(statement: "MATCH (this)-[:Y_NODE]->(n:Node) RETURN n")
   x_end: LinkEnd @cypher(statement: "MATCH (this)-[:X_END]->(le:LinkEnd) RETURN le")
@@ -117,7 +117,7 @@ type SequenceProperty{
 input NodeInput{
   label: String
   story: URI
-  type: NodeType
+  nodeType: NodeType
   synchronous: Boolean
   unreliable: Boolean
 }
@@ -137,7 +137,7 @@ input LinkInput{
   label: String
   x_id: ID
   y_id: ID
-  type: LinkType
+  linkType: LinkType
   story: URI
   optional: Boolean
 }
@@ -160,8 +160,8 @@ input SequencePropertyInput{
 
 type Mutation{
   SeedDB: seedReturn
-  CreateNode(id: ID!, label: String!, type: NodeType!, props: NodeCreateInput): NodeOperationReturn
-  CreateLink(id: ID!, label: String!, x_id: ID!, y_id: ID!, type: LinkType!, props: LinkCreateInput): LinkOperationReturn
+  CreateNode(id: ID!, label: String!, nodeType: NodeType!, props: NodeCreateInput): NodeOperationReturn
+  CreateLink(id: ID!, label: String!, x_id: ID!, y_id: ID!, linkType: LinkType!, props: LinkCreateInput): LinkOperationReturn
   CreateSequence(link_id: ID!, props: SequencePropertyInput): SequenceOperationReturn
   CreateLinkEnd(link_id: ID!, props: LinkEndInput): LinkEndOperationReturn
 

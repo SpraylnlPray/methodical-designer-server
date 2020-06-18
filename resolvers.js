@@ -45,7 +45,7 @@ const resolvers = {
 			try {
 				const session = ctx.driver.session();
 				const query = `
-					CREATE (n:Node:${ args.type } {id: $id, label: $label, type: $type})
+					CREATE (n:Node:${ args.type } {id: $id, label: $label, nodeType: $nodeType})
 					SET n += $props
 					RETURN n`;
 				const results = await session.run( query, args );
@@ -63,7 +63,7 @@ const resolvers = {
 				const session = ctx.driver.session();
 				const query = `
 					CREATE (l:Link:${ args.type } {id: $id})
-					SET l += {x_id: $x_id, y_id: $y_id, type: $type, label: $label}
+					SET l += {x_id: $x_id, y_id: $y_id, linkType: $linkType, label: $label}
 					SET l += $props
 					WITH l AS l
 					MATCH (x:Node) WHERE x.id = $x_id
