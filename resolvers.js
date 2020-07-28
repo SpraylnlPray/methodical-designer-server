@@ -1,9 +1,7 @@
 const seedQuery = require( './seed' );
 const neo4j = require( 'neo4j-driver' );
-const { defaultNode, defaultLink, defaultSeq, defaultLinkEnd } = require( './defaults' );
-const { PrepareReturn, TakeKeysFromProps } = require( './ResolverUtils' );
-const defaultRes = { success: true, message: '' };
-const errorRes = e => ({ success: false, message: e.message });
+const { defaultNode, defaultLink, defaultSeq, defaultLinkEnd, defaultRes, errorRes } = require( './defaults' );
+const { PrepareReturn, TakeKeysFromProps, Get } = require( './ResolverUtils' );
 
 const resolvers = {
 	Query: {
@@ -45,7 +43,7 @@ const resolvers = {
 			try {
 				const session = ctx.driver.session();
 				const query = `
-					CREATE (n:Node:${ args.type } {id: $id, label: $label, nodeType: $nodeType})
+					CREATE (n:Node:${ args.nodeType } {id: $id, label: $label, nodeType: $nodeType})
 					SET n += $props
 					RETURN n`;
 				const results = await session.run( query, args );
@@ -62,7 +60,7 @@ const resolvers = {
 			try {
 				const session = ctx.driver.session();
 				const query = `
-					CREATE (l:Link:${ args.type } {id: $id})
+					CREATE (l:Link:${ args.linkType } {id: $id})
 					SET l += {x_id: $x_id, y_id: $y_id, linkType: $linkType, label: $label}
 					SET l += $props
 					WITH l AS l
@@ -143,7 +141,7 @@ const resolvers = {
 				const session = ctx.driver.session();
 				const query = `
 					MATCH (n:Node) WHERE n.id = $id
-					SET n:Node:${ args.type }
+					SET n:Node:${ args.props.nodeType }
 					SET n += $props
 					RETURN n
 				`;
@@ -162,6 +160,7 @@ const resolvers = {
 				const session = ctx.driver.session();
 				let query = `
 					MATCH (l:Link) WHERE l.id = $id
+					SET l:Link:${ args.props.linkType }
 					SET l += $props
 				`;
 

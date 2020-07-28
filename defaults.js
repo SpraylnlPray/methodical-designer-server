@@ -22,5 +22,7 @@ const defaultNode = {
 	unreliable: false,
 };
 const defaultLinkEnd = { note: 'None', arrow: 'default' };
+const defaultRes = { success: true, message: '' };
+const errorRes = e => ({ success: false, message: e.message });
 
-module.exports = { defaultSeq, defaultLink, defaultNode, defaultLinkEnd };
+module.exports = { defaultSeq, defaultLink, defaultNode, defaultLinkEnd, defaultRes, errorRes };

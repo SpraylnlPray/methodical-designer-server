@@ -34,4 +34,4 @@ function TakeKeysFromProps( object, ...keys ) {
 	return object;
 }
 
-module.exports = { PrepareReturn, TakeKeysFromProps, SetDefaults };
+module.exports = { PrepareReturn, TakeKeysFromProps, SetDefaults, Get };
