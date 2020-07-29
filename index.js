@@ -52,9 +52,17 @@ server.applyMiddleware( {
 } );
 
 const d = new Date();
-const version = 2.2;
+const version = 2.3;
 
 app.listen( { port, path }, () => {
 	console.log( `Server v${ version } started at ${ d } listening on http://localhost:${ port }${ path }` );
 } );
 
+async function exitHandler( options ) {
+	if ( options.exit ) {
+		await driver.close();
+	}
+}
+
+process.on( 'exit', exitHandler.bind( null, { exit: true } ) );
+process.on( 'SIGINT', exitHandler.bind( null, { exit: true } ) );

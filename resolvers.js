@@ -14,6 +14,7 @@ const resolvers = {
 				`;
 
 				const results = await session.run( getCurStatusQuery );
+				await session.close();
 				const project = results.records[0].get( 'p' ).properties;
 
 				return {
@@ -34,6 +35,7 @@ const resolvers = {
 			`;
 			await session.run( deleteQuery );
 			await session.run( seedQuery );
+			await session.close();
 			return {
 				success: true,
 			};
@@ -47,6 +49,7 @@ const resolvers = {
 					SET n += $props
 					RETURN n`;
 				const results = await session.run( query, args );
+				await session.close();
 				return {
 					...defaultRes,
 					node: PrepareReturn( results, 'n', defaultNode ),
@@ -72,6 +75,7 @@ const resolvers = {
 					RETURN l
 				`;
 				const results = await session.run( query, args );
+				await session.close();
 				return {
 					...defaultRes,
 					link: PrepareReturn( results, 'l', defaultLink ),
@@ -96,6 +100,7 @@ const resolvers = {
 					RETURN s, l
 				`;
 				const results = await session.run( query, args );
+				await session.close();
 				const seq = Get( results, 's' );
 				seq.seq = neo4j.integer.toNumber( seq.seq );
 				return {
@@ -122,6 +127,7 @@ const resolvers = {
 					RETURN le, l
 				`;
 				const results = await session.run( query, args );
+				await session.close();
 				return {
 					...defaultRes,
 					link: PrepareReturn( results, 'l', defaultLink ),
@@ -146,6 +152,7 @@ const resolvers = {
 					RETURN n
 				`;
 				const results = await session.run( query, args );
+				await session.close();
 				return {
 					...defaultRes,
 					node: PrepareReturn( results, 'n', defaultNode ),
@@ -188,6 +195,7 @@ const resolvers = {
 					RETURN l
 				`;
 				const results = await session.run( query, args );
+				await session.close();
 
 				return {
 					...defaultRes,
@@ -211,6 +219,7 @@ const resolvers = {
 				`;
 
 				const results = await session.run( query, args );
+				await session.close();
 				return {
 					...defaultRes,
 					seq: PrepareReturn( results, 's', defaultSeq ),
@@ -232,6 +241,7 @@ const resolvers = {
 					RETURN le, l
 				`;
 				const results = await session.run( query, args );
+				await session.close();
 				return {
 					...defaultRes,
 					end: PrepareReturn( results, 'le', defaultLinkEnd ),
@@ -254,6 +264,7 @@ const resolvers = {
 				RETURN l, s
 			`;
 			const results = await session.run( query, args );
+			await session.close();
 			const seq = Get( results, 's' );
 			seq.seq = neo4j.integer.toNumber( seq.seq );
 			return {
@@ -273,6 +284,7 @@ const resolvers = {
 				RETURN le, l
 			`;
 			const results = await session.run( query, args );
+			await session.close();
 			return {
 				success: true,
 				link: Get( results, 'l' ),
@@ -302,6 +314,7 @@ const resolvers = {
 					DETACH DELETE l
 				`;
 				await session.run( cleanupQuery );
+				await session.close();
 
 				return {
 					success: true,
@@ -325,6 +338,7 @@ const resolvers = {
 					DETACH DELETE l
 				`;
 				await session.run( query, args );
+				await session.close();
 				return {
 					success: true,
 					id: args.id,
@@ -343,6 +357,7 @@ const resolvers = {
 					DETACH DELETE s
 				`;
 				await session.run( query, args );
+				await session.close();
 				return { success: true };
 			}
 			catch ( e ) {
@@ -374,6 +389,7 @@ const resolvers = {
 				`;
 
 				const results = await session.run( getCurStatusQuery );
+				await session.close();
 				let project = results.records[0].get( 'p' ).properties;
 				// we need to return false to tell the UI that the request failed
 				if ( project.isBeingEdited ) {
@@ -417,6 +433,7 @@ const resolvers = {
 				`;
 
 				const results = await session.run( setCurStatusQuery );
+				await session.close();
 				let project = results.records[0].get( 'p' ).properties;
 				// if it is now false, return true because the operation worked
 				if ( !project.isBeingEdited ) {
