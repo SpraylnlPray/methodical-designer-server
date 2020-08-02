@@ -389,10 +389,10 @@ const resolvers = {
 				`;
 
 				const results = await session.run( getCurStatusQuery );
-				await session.close();
 				let project = results.records[0].get( 'p' ).properties;
 				// we need to return false to tell the UI that the request failed
 				if ( project.isBeingEdited ) {
+					await session.close();
 					return {
 						success: false,
 						message: 'Someone else is currently editing the project',
@@ -406,6 +406,7 @@ const resolvers = {
 						RETURN p
 					`;
 					const setResults = await session.run( setEditQuery );
+					await session.close();
 					project = setResults.records[0].get( 'p' ).properties;
 					if ( project.isBeingEdited ) {
 						return { ...defaultRes };

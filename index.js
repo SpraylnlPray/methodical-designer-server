@@ -52,7 +52,7 @@ server.applyMiddleware( {
 } );
 
 const d = new Date();
-const version = 2.3;
+const version = 2.4;
 
 app.listen( { port, path }, () => {
 	console.log( `Server v${ version } started at ${ d } listening on http://localhost:${ port }${ path }` );
