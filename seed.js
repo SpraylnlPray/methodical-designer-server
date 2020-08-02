@@ -14,22 +14,22 @@ const query = `
 	CREATE (s1:Sequence {id: randomUUID(), group: "Sequence Group", label: "Test Sequence", seq: 1})
 	CREATE (l_Trigger_Event)-[:IS]->(s1)
 	
-	CREATE (le_X_UI_Event:LinkEnd {id: randomUUID(), note: "A note on the X end of the Trigger link", arrow: "default"})
+	CREATE (le_X_UI_Event:LinkEnd {id: randomUUID(), note: "A note on the X end of the Trigger link", arrow: "Default"})
 	CREATE (l_Trigger_Event)-[:X_END]->(le_X_UI_Event)
 	
-	CREATE (le_Y_UI_Event:LinkEnd {id: randomUUID(), note: "A note on the Y end of the Trigger link", arrow: "default"})
+	CREATE (le_Y_UI_Event:LinkEnd {id: randomUUID(), note: "A note on the Y end of the Trigger link", arrow: "Default"})
 	CREATE (l_Trigger_Event)-[:Y_END]->(le_Y_UI_Event)
 	
 	CREATE (l_Trigger_Server:Link:Trigger {id: randomUUID(), x_id: event.id, y_id: api.id, label: "Triggers", story: "Invoke mutation function to alter data in the DB", linkType: "Trigger"})
 	CREATE (event)<-[:X_NODE]-(l_Trigger_Server)-[:Y_NODE]->(api)
 	
-	CREATE (le_API_Event:LinkEnd {id: randomUUID(), note: "A note on the X end of the Trigger link", arrow: "default"})
+	CREATE (le_API_Event:LinkEnd {id: randomUUID(), note: "A note on the X end of the Trigger link", arrow: "Default"})
 	CREATE (l_Trigger_Server)-[:X_END]->(le_API_Event)
 	
 	CREATE (l_Mutate_DB:Link:Mutate {id: randomUUID(), x_id: api.id, y_id: pers.id, label: "Mutates", story: "Mutates the data in the DB upon an event from the UI", linkType: "Mutate"})
 	CREATE (api)<-[:X_NODE]-(l_Mutate_DB)-[:Y_NODE]->(pers)
 	
-	CREATE (le_Pers_API:LinkEnd {id: randomUUID(), note: "A note on the X end of the Trigger link", arrow: "default"})
+	CREATE (le_Pers_API:LinkEnd {id: randomUUID(), note: "A note on the X end of the Trigger link", arrow: "Default"})
 	CREATE (l_Mutate_DB)-[:X_END]->(le_Pers_API)
 	
 	CREATE (s2:Sequence {id: randomUUID(), group: "Sequence Group", label: "Test Sequence", seq: 1})
