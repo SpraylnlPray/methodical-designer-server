@@ -376,7 +376,7 @@ const resolvers = {
 				return { success: true };
 			}
 			catch ( e ) {
-				errorRes( e );
+				return errorRes( e );
 			}
 		},
 
@@ -420,7 +420,7 @@ const resolvers = {
 				}
 			}
 			catch ( e ) {
-				return { ...errorRes };
+				return errorRes( e );
 			}
 		},
 
@@ -448,7 +448,7 @@ const resolvers = {
 				}
 			}
 			catch ( e ) {
-				return { ...errorRes };
+				return errorRes( e );
 			}
 		},
 	},

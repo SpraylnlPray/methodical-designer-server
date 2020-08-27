@@ -32,6 +32,7 @@ const server = new ApolloServer( {
 	],
 	formatError: ( err ) => {
 		return {
+			hello: 'hello',
 			message: err.message,
 			code: err.extensions.code,
 			success: false,
@@ -39,6 +40,7 @@ const server = new ApolloServer( {
 		};
 	},
 	formatResponse: ( res ) => {
+		console.log( res );
 		return res;
 	},
 } );
