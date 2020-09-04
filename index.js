@@ -14,7 +14,8 @@ app.use( cors() );
 const DB_HOST = process.env.NODE_ENV === 'production' ? process.env.DB_PROD_HOST : process.env.DB_DEV_HOST;
 const DB_PW = process.env.NODE_ENV === 'production' ? process.env.DB_PROD_PW : process.env.DB_DEV_PW;
 
-const URI = `bolt://${ DB_HOST }:${ process.env.DB_PORT }`;
+// const URI = `bolt://${ DB_HOST }:${ process.env.DB_PORT }`;
+const URI = `bolt://${ DB_HOST }`;
 const driver = neo4j.driver(
 	URI,
 	neo4j.auth.basic( process.env.DB_USER, DB_PW ),
@@ -32,16 +33,11 @@ const server = new ApolloServer( {
 	],
 	formatError: ( err ) => {
 		return {
-			hello: 'hello',
 			message: err.message,
 			code: err.extensions.code,
 			success: false,
 			stack: err.path,
 		};
-	},
-	formatResponse: ( res ) => {
-		console.log( res );
-		return res;
 	},
 } );
 
