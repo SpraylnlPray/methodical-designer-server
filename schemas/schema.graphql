@@ -16,6 +16,7 @@ enum NodeType{
   Invariant
   ArchitecturalDecisionRecord
   Definition
+  Team
 }
 
 enum LinkType{
@@ -24,6 +25,7 @@ enum LinkType{
   Read
   Mutate
   Generic
+  Responsibility
 }
 
 enum ArrowType{
