@@ -13,7 +13,7 @@ const app = express();
 app.use( cors() );
 
 app.get( '/healthcheck', ( req, res ) => {
-	// console.log( 'hello there' );
+	console.log( 'hello there' );
 	res.status(200);
 	res.send();
 } );
