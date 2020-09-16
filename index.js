@@ -11,6 +11,13 @@ const errorPlugin = require( './error-logging-plugin' );
 const app = express();
 
 app.use( cors() );
+
+app.get( '/healthcheck', ( req, res ) => {
+	// console.log( 'hello there' );
+	res.status(200);
+	res.send();
+} );
+
 const DB_HOST = process.env.NODE_ENV === 'production' ? process.env.DB_PROD_HOST : process.env.DB_DEV_HOST;
 const DB_PW = process.env.NODE_ENV === 'production' ? process.env.DB_PROD_PW : process.env.DB_DEV_PW;
 
