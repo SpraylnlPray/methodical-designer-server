@@ -1,0 +1,5 @@
+{
+  "operationName": "nodes",
+  "variables": {},
+  "query": "query nodes { Nodes { id } }"
+}

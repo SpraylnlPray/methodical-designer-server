@@ -7,15 +7,28 @@ const { makeAugmentedSchema } = require( 'neo4j-graphql-js' );
 const typeDefs = require( './graphql-schema' );
 const resolvers = require( './resolvers' );
 const errorPlugin = require( './error-logging-plugin' );
+const fetch = require( 'node-fetch' );
+const healthCheckQuery = require( './healthCheck.json' );
 
 const app = express();
 
 app.use( cors() );
 
-app.get( '/healthcheck', ( req, res ) => {
+app.get( '/healthcheck', ( res ) => {
 	console.log( 'hello there' );
-	res.status(200);
-	res.send();
+	console.log( 'query: ' + healthCheckQuery )
+	fetch( 'http://localhost:8080/graphql', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify( healthCheckQuery )
+	} )
+		.then( data => {
+			console.log( 'received: ' + data );
+			res.status = data.status;
+			res.send();
+		} );
 } );
 
 const DB_HOST = process.env.NODE_ENV === 'production' ? process.env.DB_PROD_HOST : process.env.DB_DEV_HOST;
