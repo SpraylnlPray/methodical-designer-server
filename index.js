@@ -15,8 +15,6 @@ const app = express();
 app.use( cors() );
 
 app.get( '/healthcheck', ( _, res ) => {
-	console.log( 'hello there' );
-	console.log( 'query: ' + JSON.stringify( healthCheckQuery ) )
 	fetch( 'http://localhost:8080/graphql', {
 		method: 'POST',
 		headers: {
@@ -25,7 +23,6 @@ app.get( '/healthcheck', ( _, res ) => {
 		body: JSON.stringify( healthCheckQuery )
 	} )
 		.then( data => {
-			console.log( 'received: ' + JSON.stringify( data ) );
 			res.status = data.status;
 			res.send();
 		} );
